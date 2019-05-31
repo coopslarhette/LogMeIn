@@ -18,7 +18,9 @@ def has_user(username, user_search):
 def check_password(password, pass_search):
     try:
         print(lineIndex)
-        pass_search.index(password + "\n") == lineIndex
+        if pass_search.index(password + "\n") != lineIndex:  # issue here with checking password and making sure its
+            # the correct password
+            return False
     except ValueError:
         print("ValueError")
         return False
