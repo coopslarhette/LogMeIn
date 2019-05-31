@@ -16,14 +16,19 @@ def has_user(username, user_search):
 
 # TODO: can probably implement a better search here...
 def check_password(password, pass_search):
-    print(pass_search.pop(lineIndex))
-    return pass_search.pop(lineIndex) == password
+    try:
+        print(lineIndex)
+        pass_search.index(password + "\n") == lineIndex
+    except ValueError:
+        print("ValueError")
+        return False
+    return True
 
 
 def register(username, password, usernames, passwords):  # TODO: implement hash + salt here?
     global lineIndex
-    usernames.write(username)
-    passwords.write(password)
+    usernames.write(username + "\n")
+    passwords.write(password + "\n")
 
 
 class LogMeIn:
