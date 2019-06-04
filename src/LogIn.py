@@ -4,7 +4,7 @@ lineIndex = 0
 # TODO: can probably implement a better search here...
 def has_user(username, user_fpath):
     global lineIndex
-    with open(user_fpath, "r+") as file:
+    with open(user_fpath, "r") as file:
         for line in file.readlines():
             if username + "\n" == line:
                 return True
@@ -16,7 +16,6 @@ def check_password(password, pass_fpath):
     global lineIndex
     with open(pass_fpath, "r+") as file:
         lines = file.readlines()
-        # print("index: ", lineIndex)
         temp_pass = lines[lineIndex]
         return temp_pass == password + "\n"
 
@@ -30,6 +29,7 @@ def register(username, password, user_fpath, pass_fpath):  # TODO: implement has
 
 
 class LogMeIn:
+    global lineIndex
     username = ""
     while username != "logout":
         lineIndex = 0
