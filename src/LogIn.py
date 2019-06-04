@@ -1,56 +1,47 @@
-credentials = {}
-usernames = open("data/user.txt", "r+")
-passwords = open("data/pass.txt", "r+")
 lineIndex = 0
 
 
 # TODO: can probably implement a better search here...
-def has_user(username, user_search):
+def has_user(username, user_fpath):
     global lineIndex
-    for line in user_search:
-        if username + "\n" == line:
-            return True
-        lineIndex += 1
-    return False
-
-
-# TODO: can probably implement a better search here...
-def check_password(password, pass_search):
-    try:
-        print(lineIndex)
-        if pass_search.index(password + "\n") != lineIndex:  # issue here with checking password and making sure its
-            # the correct password
-            return False
-    except ValueError:
-        print("ValueError")
+    with open(user_fpath, "r+") as file:
+        for line in file.readlines():
+            if username + "\n" == line:
+                return True
+            lineIndex += 1
         return False
-    return True
 
 
-def register(username, password, usernames, passwords):  # TODO: implement hash + salt here?
+def check_password(password, pass_fpath):
     global lineIndex
-    usernames.write(username + "\n")
-    passwords.write(password + "\n")
+    with open(pass_fpath, "r+") as file:
+        lines = file.readlines()
+        # print("index: ", lineIndex)
+        temp_pass = lines[lineIndex]
+        return temp_pass == password + "\n"
+
+
+def register(username, password, user_fpath, pass_fpath):  # TODO: implement hash + salt here?
+    with open(user_fpath, "a") as file:
+        file.write(username + "\n")
+    with open(pass_fpath, "a") as file:
+        file.write(password + "\n")
+    return
 
 
 class LogMeIn:
     username = ""
     while username != "logout":
-        usernames = open("data/user.txt", "r+")
-        passwords = open("data/pass.txt", "r+")
-        search_user = usernames.readlines()
+        lineIndex = 0
         username = input(
             "Hello, to log in please enter your username or 'register' if you wish to create a new account: ")
         if username == "register":
             username = input("Please enter a username of your choice: ")
             password = input("Please enter the password of your choice: ")
-            register(username, password, usernames, passwords)
-        elif has_user(username, search_user):
-            search_pass = passwords.readlines()
+            register(username, password, "data/user.txt", "data/pass.txt")
+        elif has_user(username, "data/user.txt"):
             password = input("Please enter your password: ")
-            print("everything worked, you're in") if check_password(password, search_pass) else print(
+            print("everything worked, you're in") if check_password(password, "data/pass.txt") else print(
                 "incorrect password")
         else:
             print("Please enter either 'register', to create a new account, or an already register username.")
-        usernames.close()
-        passwords.close()
