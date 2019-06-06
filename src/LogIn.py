@@ -1,3 +1,6 @@
+import hashlib
+import uuid
+
 lineIndex = 0
 
 
@@ -17,14 +20,19 @@ def check_password(password, pass_fpath):
     with open(pass_fpath, "r+") as file:
         lines = file.readlines()
         temp_pass = lines[lineIndex]
-        return temp_pass == password + "\n"
+        salty_hashed_pass, salt = temp_pass.split(':')
+        salt = salt[:-1] # chops newline character
+        given_salty_hashed_pass = hashlib.sha512(password.encode() + salt.encode()).hexdigest()
+        return salty_hashed_pass == given_salty_hashed_pass
 
 
 def register(username, password, user_fpath, pass_fpath):  # TODO: implement hash + salt here?
     with open(user_fpath, "a") as file:
         file.write(username + "\n")
     with open(pass_fpath, "a") as file:
-        file.write(password + "\n")
+        salt = uuid.uuid4().hex
+        hash_pass = hashlib.sha512(password.encode() + salt.encode()).hexdigest() + ':' + salt
+        file.write(hash_pass + "\n")
     return
 
 
