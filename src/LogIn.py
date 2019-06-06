@@ -21,12 +21,12 @@ def check_password(password, pass_fpath):
         lines = file.readlines()
         temp_pass = lines[lineIndex]
         salty_hashed_pass, salt = temp_pass.split(':')
-        salt = salt[:-1] # chops newline character
+        salt = salt[:-1]  # chops newline character
         given_salty_hashed_pass = hashlib.sha512(password.encode() + salt.encode()).hexdigest()
         return salty_hashed_pass == given_salty_hashed_pass
 
 
-def register(username, password, user_fpath, pass_fpath):  # TODO: implement hash + salt here?
+def register(username, password, user_fpath, pass_fpath):
     with open(user_fpath, "a") as file:
         file.write(username + "\n")
     with open(pass_fpath, "a") as file:
